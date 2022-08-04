@@ -62,7 +62,10 @@ app.get("/movies", async (req,res)=>{
   console.log(req.body);
   connection.query(
       "select * from movie",(err,rows,fields)=>{
-          // console.log(rows);
+          let arr = [];
+          for(i=0; i<=rows.length-1;i++){
+           arr = rows[i].img.split(",")
+           rows[i].img = arr;}
           res.send(rows);
       }
   )
@@ -72,7 +75,6 @@ app.get("/movies", async (req,res)=>{
 app.get("/movie/:key", async (req,res)=>{
   const params = req.params
   const {key} = params
-  // console.log(key)
   connection.query(
       `select * from movie where sns like '%${key}%'`,(err,rows,fields)=>{
           // console.log(rows);
@@ -107,7 +109,6 @@ app.get("/movieaction/:keywordaction", async (req,res)=>{
 app.get("/detail/:id", async (req,res)=>{
   const params = req.params
   const {id} = params
-  console.log(id);
   connection.query(
       `select * from movie where no = ${id}`,(err,rows,fields)=>{
           console.log(rows)
