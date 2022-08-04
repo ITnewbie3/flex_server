@@ -36,7 +36,7 @@ const upload = multer({
     limits: { fileSize: 30000000 }
   });
 
-// 받아서 보내줌
+// 이미지등록 후 이미지저장 파일명 재전송
 app.post("/upload", upload.array("image"), function(req, res) {
   const file = req.file;
   const fileList = req.files;
@@ -57,6 +57,67 @@ app.post("/addmovie", async (req, res) => {
            }
   )
 
+  //전체 출력하기
+app.get("/movies", async (req,res)=>{
+  console.log(req.body);
+  connection.query(
+      "select * from movie",(err,rows,fields)=>{
+          // console.log(rows);
+          res.send(rows);
+      }
+  )
+})
+
+//키워드 출력하기
+app.get("/movie/:key", async (req,res)=>{
+  const params = req.params
+  const {key} = params
+  // console.log(key)
+  connection.query(
+      `select * from movie where sns like '%${key}%'`,(err,rows,fields)=>{
+          // console.log(rows);
+          let arr = [];
+          for(i=0; i<=rows.length-1;i++){
+           arr = rows[i].img.split(",")
+           rows[i].img = arr;
+            // console.log(rows[i])
+        }
+          res.send(rows); //결과 보내주기~~
+      })
+})
+
+//액션추가
+app.get("/movieaction/:keywordaction", async (req,res)=>{
+  const params = req.params
+  const {keywordaction} = params
+  // console.log(key)
+  connection.query(
+      `select * from movie where sns like '%${keywordaction}%'`,(err,rows,fields)=>{
+          // console.log(rows);
+          let arr = [];
+          for(i=0; i<=rows.length-1;i++){
+           arr = rows[i].img.split(",")
+           rows[i].img = arr;
+            // console.log(rows[i])
+        }
+          res.send(rows); //결과 보내주기~~
+      })
+})
+
+app.get("/detail/:id", async (req,res)=>{
+  const params = req.params
+  const {id} = params
+  console.log(id);
+  connection.query(
+      `select * from movie where no = ${id}`,(err,rows,fields)=>{
+          console.log(rows)
+          let arr = [];
+           arr = rows[0].img.split(",")
+           rows[0].img = arr;
+            console.log(rows[0])
+            res.send(rows); 
+        })
+      })
 
 
     //서버실행
