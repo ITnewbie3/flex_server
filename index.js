@@ -106,20 +106,88 @@ app.get("/movieaction/:keywordaction", async (req,res)=>{
       })
 })
 
+// 영화 자세히보기 확인
 app.get("/detail/:id", async (req,res)=>{
   const params = req.params
   const {id} = params
   connection.query(
       `select * from movie where no = ${id}`,(err,rows,fields)=>{
-          console.log(rows)
           let arr = [];
            arr = rows[0].img.split(",")
            rows[0].img = arr;
-            console.log(rows[0])
             res.send(rows); 
         })
       })
 
+// 회원가입
+
+app.post("/addmember", async (req, res) => {
+  const {id,pw,name,phone} = req.body;
+  connection.query(
+      "INSERT INTO member(`id`,`pw`,`mname`,`phone`) VALUES (?, ?, ?, ?)",
+      [id,pw,name,phone],
+      (err,rows,fields)=>{
+          res.send(req.body)
+            })
+           }
+  )
+
+  // 로그인용 id비번확인
+app.post("/member", async (req,res)=>{
+  // console.log(req)
+  const {id, pw} = req.body
+  // console.log(id,pw)
+  connection.query(
+      `select id,pw from member where id = '${id}'`,(err,rows,fields)=>{
+          // console.log(rows);
+          // console.log(err);
+          res.send(rows[0]); //결과 보내주기~~
+      }
+
+  )
+})
+// 찜하기 등록
+app.post("/favorites", async (req, res) => {
+  const {id,name} = req.body;
+  connection.query(
+      "INSERT INTO favorites(`id`,`name`) VALUES (?, ?)",
+      [id,name],
+      (err,rows,fields)=>{
+          res.send(req.body)
+          console.log(id,name)
+            })
+           }
+  )
+
+  // 찜하기 목록(id별)
+  app.get("/favorit/:id", async (req,res)=>{
+    const params = req.params
+    const {id} = params
+    console.log(id)
+    connection.query(
+      `SELECT a.name,a.no,b.attendance,b.opening,b.genre,b.rating,b.runningtime,b.img from movie as b
+ RIGHT OUTER JOIN favorites as a on b.name = a.name where a.id = '${id}'`,(err,rows,fields)=>{
+          let arr = [];
+          for(i=0; i<=rows.length-1;i++){
+          arr = rows[i].img.split(",")
+          rows[i].img = arr;
+          } 
+              res.send(rows); 
+          })
+        })
+// 찜하기 삭제
+    app.post("/delfavorites/:no", async (req,res)=>{
+      const params = req.params
+      const {no} = params
+      connection.query(
+        ` DELETE FROM favorites WHERE ('no'='${no}')  `,
+        (err,rows,fields)=>{
+          console.log(rows);
+          console.log(err)
+            res.send(req.body)
+              })
+             
+    })
 
     //서버실행
 app.listen(port, () => {
