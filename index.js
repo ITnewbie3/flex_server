@@ -180,15 +180,14 @@ app.post("/favorites", async (req, res) => {
       const params = req.params
       const {no} = params
       connection.query(
-        ` DELETE FROM favorites WHERE ('no'='${no}')  `,
+        `DELETE FROM favorites WHERE no=${no}`,
         (err,rows,fields)=>{
           console.log(rows);
-          console.log(err)
             res.send(req.body)
               })
              
     })
-
+    // DELETE FROM favorites WHERE 'no'='${no}'
     //서버실행
 app.listen(port, () => {
     console.log("서버 동작 중")
