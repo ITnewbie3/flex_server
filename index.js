@@ -2,7 +2,7 @@ const path = require("path");
 const express = require("express");
 const cors = require('cors')
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 8080;
 const multer = require("multer");
 
 const mysql = require('mysql');
@@ -33,7 +33,7 @@ const storage = multer.diskStorage({
 //파일 사이즈 지정
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 30000000 }
+    limits: { fileSize: 3000000 }
   });
 
 // 이미지등록 후 이미지저장 파일명 재전송
@@ -77,14 +77,12 @@ app.get("/movie/:key", async (req,res)=>{
   const {key} = params
   connection.query(
       `select * from movie where sns like '%${key}%'`,(err,rows,fields)=>{
-          // console.log(rows);
           let arr = [];
           for(i=0; i<=rows.length-1;i++){
            arr = rows[i].img.split(",")
            rows[i].img = arr;
-            // console.log(rows[i])
         }
-          res.send(rows); //결과 보내주기~~
+          res.send(rows); //결과 보내주기
       })
 })
 
@@ -95,14 +93,12 @@ app.get("/movieaction/:keywordaction", async (req,res)=>{
   // console.log(key)
   connection.query(
       `select * from movie where sns like '%${keywordaction}%'`,(err,rows,fields)=>{
-          // console.log(rows);
           let arr = [];
           for(i=0; i<=rows.length-1;i++){
            arr = rows[i].img.split(",")
            rows[i].img = arr;
-            // console.log(rows[i])
         }
-          res.send(rows); //결과 보내주기~~
+          res.send(rows); //결과 보내주기
       })
 })
 
@@ -154,7 +150,6 @@ app.post("/favorites", async (req, res) => {
       [id,name],
       (err,rows,fields)=>{
           res.send(req.body)
-          console.log(id,name)
             })
            }
   )
@@ -182,12 +177,10 @@ app.post("/favorites", async (req, res) => {
       connection.query(
         `DELETE FROM favorites WHERE no=${no}`,
         (err,rows,fields)=>{
-          console.log(rows);
             res.send(req.body)
               })
              
     })
-    // DELETE FROM favorites WHERE 'no'='${no}'
     //서버실행
 app.listen(port, () => {
     console.log("서버 동작 중")
