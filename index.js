@@ -160,13 +160,14 @@ app.post("/favorites", async (req, res) => {
     const {id} = params
     console.log(id)
     connection.query(
-      `SELECT a.name,a.no,b.attendance,b.opening,b.genre,b.rating,b.runningtime,b.img from movie as b
+      `SELECT a.name,a.no,b.attendance,b.opening,b.genre,b.rating,b.runningtime,b.img,b.no as num from movie as b
  RIGHT OUTER JOIN favorites as a on b.name = a.name where a.id = '${id}'`,(err,rows,fields)=>{
           let arr = [];
           for(i=0; i<=rows.length-1;i++){
           arr = rows[i].img.split(",")
           rows[i].img = arr;
           } 
+          console.log(rows)
               res.send(rows); 
           })
         })
