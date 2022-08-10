@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require('cors')
 const app = express();
 const port = process.env.PORT || 8080;
+// const port = 3001
 const multer = require("multer");
 
 const mysql = require('mysql');
@@ -118,10 +119,11 @@ app.get("/detail/:id", async (req,res)=>{
 // 회원가입
 
 app.post("/addmember", async (req, res) => {
-  const {id,pw,name,phone} = req.body;
+  const phone = `${req.body.phone1}-${req.body.phone2}-${req.body.phone3}`   
+  const {id,pw,name,email} = req.body;
   connection.query(
-      "INSERT INTO member(`id`,`pw`,`mname`,`phone`) VALUES (?, ?, ?, ?)",
-      [id,pw,name,phone],
+      "INSERT INTO member(`id`,`pw`,`mname`,`phone`,`email`) VALUES (?, ?, ?, ?,?)",
+      [id,pw,name,phone,email],
       (err,rows,fields)=>{
           res.send(req.body)
             })
@@ -167,7 +169,6 @@ app.post("/favorites", async (req, res) => {
           arr = rows[i].img.split(",")
           rows[i].img = arr;
           } 
-          console.log(rows)
               res.send(rows); 
           })
         })
