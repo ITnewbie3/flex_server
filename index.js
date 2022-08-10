@@ -145,7 +145,7 @@ app.post("/member", async (req,res)=>{
   const {id, pw} = req.body
   // console.log(id,pw)
   connection.query(
-      `select id,pw from member where id = '${id}'`,(err,rows,fields)=>{
+      `select id,pw,mname from member where id = '${id}'`,(err,rows,fields)=>{
           // console.log(rows);
           // console.log(err);
           res.send(rows[0]); //결과 보내주기~~
