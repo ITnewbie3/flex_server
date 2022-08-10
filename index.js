@@ -129,6 +129,15 @@ app.post("/addmember", async (req, res) => {
             })
            }
   )
+   // ID중복체크
+   app.get("/checkmember/:id", async (req,res)=>{
+    const params = req.params
+    const {id} = params
+    connection.query(
+      `select id from member where id = '${id}'`,(err,rows,fields)=>{   
+        res.send(rows); 
+          })
+        })
 
   // 로그인용 id비번확인
 app.post("/member", async (req,res)=>{
