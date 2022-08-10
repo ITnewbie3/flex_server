@@ -192,6 +192,41 @@ app.post("/favorites", async (req, res) => {
               })
              
     })
+
+    // 리뷰 작성 등록
+app.post("/insertreview", async (req, res) => {
+  const {id,nicname,mname,review} = req.body;
+  connection.query(
+      "INSERT INTO review(`id`,`nicname`,`mname`,`desc`) VALUES (?, ?, ?, ?)",
+      [id,nicname,mname,review],
+      (err,rows,fields)=>{
+          res.send(req.body)
+            })
+           }
+  )
+
+    // 리뷰가져오기 ( 영화별 )
+    app.get("/review/:mname", async (req,res)=>{
+      const params = req.params
+      const {mname} = params
+      connection.query(
+        `SELECT * FROM review where mname = '${mname}'`,(err,rows,fields)=>{         
+                res.send(rows); 
+                // console.log(rows)
+            })
+          })
+
+    // 리뷰삭제 ( no로 확인 )
+    app.post("/deletereview/:no", async (req,res)=>{
+      const params = req.params
+      const {no} = params
+      connection.query(
+        `DELETE FROM review where no = '${no}'`,(err,rows,fields)=>{         
+                res.send(rows); 
+            })
+          })
+    
+
     //서버실행
 app.listen(port, () => {
     console.log("서버 동작 중")
