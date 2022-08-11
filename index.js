@@ -2,12 +2,14 @@ const path = require("path");
 const express = require("express");
 const cors = require('cors')
 const app = express();
-const port = process.env.PORT || 8080;
-// const port = 3001
+// const port = process.env.PORT || 8080;
+const port = 3001;
 const multer = require("multer");
 
+
+
 const mysql = require('mysql');
-const fs = require("fs") // 파일을 읽어오도록 해줌
+const fs = require("fs"); // 파일을 읽어오도록 해줌
 app.use(express.static("public")); //public이라는 폴더에 있는 파일에 접근 할 수 있도록 설정
 const dbinfo = fs.readFileSync('./database.json');
 //받아온 json데이터를 객체형태로 변경 JSON.parse
@@ -22,6 +24,7 @@ const connection = mysql.createConnection({
 
 app.use(express.json());
 app.use(cors());
+
 
 const storage = multer.diskStorage({
   destination: function(req,res,cb){
